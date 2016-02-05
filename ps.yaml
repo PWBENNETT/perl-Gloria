@@ -1,0 +1,41 @@
+---
+- table: 'ps'
+- vars:
+    regexp:
+      - name: STIME
+        value: '\d\d:\d\d'
+      - name: TIME
+        value: '\d\d:\d\d:\d\d'
+- parse:
+    skip_start_lines: 1
+    regexp: '^(\d)\s+([A-Z])\s+(\w+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+((-?\d+)|(-))\s+(-)\s+(\d+)\s+(\w*)\s+($STIME)\s+(\S+)\s+($TIME)\s(.+)$'
+    into:
+      - 'f'
+      - 's'
+      - 'uid'
+      - 'pid'
+      - 'ppid'
+      - 'c'
+      - 'pri'
+      - 'ni'
+      - 'addr'
+      - 'sz'
+      - 'wchan'
+      - 'stime'
+      - 'tty'
+      - 'time'
+      - 'cmd'
+- transform:
+    element: 'stime'
+    using: 'short_time'
+- transform:
+    element: 'time'
+    using: 'duration'
+- transform:
+    element: 'tty'
+    using:
+      nullif: '?'
+- transform:
+    element: 'ppid'
+    using:
+      nullif: '0'
