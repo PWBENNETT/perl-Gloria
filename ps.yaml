@@ -8,7 +8,7 @@
         value: '((\d+-)?\d\d:\d\d:\d\d)'
 - parse:
     skip_start_lines: 1
-    regexp: '^(\d)\s+([A-Z])\s+(\w+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+((-?\d+)|(-))\s+(-)\s+(\d+)\s+(\w*)\s+($STIME)\s+(\S+)\s+($TIME)\s(.+)$'
+    regexp: '^(\d)\s+([A-Z])\s+(\w+)\s+(\d+)\s+(\d+)\s+(\d+)\s+((-?\d+)|(-))\s+((-?\d+)|(-))\s+(-)\s+(\d+)\s+(\w*)\s+($STIME)\s+(\S+)\s+($TIME)\s(.+)$'
     into:
       - 'f'
       - 's'
