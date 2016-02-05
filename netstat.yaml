@@ -5,7 +5,13 @@
 - vars:
     regexp:
       - name: IP_PORT
-      - value: "((?:$RE{net}{IPv4}{dec}|$RE{net}{IPv6}{-style => 'HeX'}):(?:\d+|\*))"
+        value: "((?:$RE{net}{IPv4}{dec}|$RE{net}{IPv6}{-style => 'HeX'}):(?:\d+|\*))"
+      - name: PORT_STATE
+        value: '(LISTEN|ESTABLISHED|CLOSE_WAIT|)'
+      - name: SOCK_TYPE
+        value: '(STREAM|DGRAM|SEQPACKET)'
+      - name: PORT_STATE
+        value: '(CONNECTED|LISTENING|)'
 - tables:
     - name: 'internet'
       start_regexp: '^Active Internet connections'
@@ -50,6 +56,10 @@
     element: 'internet.foreign_port'
     using:
       nullif: '*'
+- translate:
+    element: 'internet.state'
+    using:
+      nullif: ''
 - parse:
     table: 'unix'
     skip_start_lines: 1
@@ -62,3 +72,7 @@
       - 'state'
       - 'inode'
       - 'path'
+- translate:
+    element: 'unix.state'
+    using:
+      nullif: ''
