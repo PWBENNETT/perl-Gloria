@@ -10,7 +10,7 @@
         value: '(LISTEN|ESTABLISHED|CLOSE_WAIT|)'
       - name: SOCK_TYPE
         value: '(STREAM|DGRAM|SEQPACKET)'
-      - name: PORT_STATE
+      - name: SOCK_STATE
         value: '(CONNECTED|LISTENING|)'
 - tables:
     - name: 'internet'
