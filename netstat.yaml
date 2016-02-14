@@ -15,10 +15,10 @@
 - tables:
     - name: 'internet'
       start_regexp: '^Active Internet connections'
-      skip_delimiter: 1
+      skip_start_lines: 1
     - name: 'unix'
       start_regexp: '^Active UNIX domain sockets'
-      skip_delimiter: 1
+      skip_start_lines: 1
 - parse:
     table: 'internet'
     skip_start_lines: 1

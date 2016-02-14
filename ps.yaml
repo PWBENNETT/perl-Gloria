@@ -1,5 +1,8 @@
 ---
 - table: 'ps'
+- use:
+    - 'DateTime::Format::Duration'
+    - 'DateTime::Format::Strptime'
 - vars:
     regexp:
       - name: STIME
@@ -27,10 +30,10 @@
       - 'cmd'
 - transform:
     element: 'stime'
-    using: 'short_time'
+    using_code: 'sub { ... }'
 - transform:
     element: 'time'
-    using: 'duration'
+    using_code: 'sub { ... }'
 - transform:
     element: 'tty'
     using:
@@ -39,3 +42,11 @@
     element: 'ppid'
     using:
       nullif: '0'
+- transform:
+    element: 'pri'
+    using:
+      nullif: '-'
+- transform:
+    element: 'ni'
+    using:
+      nullif: '-'
