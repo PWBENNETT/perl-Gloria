@@ -25,6 +25,7 @@ App::Gloria - The engine for the C<gloria> data-parsing tool
     my $configs = io->catdir($ENV{ HOME }, '.gloria.d')->filter(sub { $_->filename =~ /\.yml$/ })->sort(1);
     sub table_exists {
         carp $_[0]->{ Driver }->{ Name } . " table $_[1] already exists. Going to add to it";
+        return 1;
     };
     my $gloria = App::Gloria->new(dbh => $dbh, configs => $configs, table_exists => \&table_exists);
     $gloria->parse_string(qx{ps -efl});
