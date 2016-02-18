@@ -1,48 +1,51 @@
 ---
-- table: 'ps'
+- tables:
+    - name: 'ps'
 - use:
     - 'DateTime::Format::Duration'
     - 'DateTime::Format::Strptime'
-- parse:
-    skip_start_lines: 1
-    split:
-      on: '\s+'
-      first: 15
-    into:
-      - 'f'
-      - 's'
-      - 'uid'
-      - 'pid'
-      - 'ppid'
-      - 'c'
-      - 'pri'
-      - 'ni'
-      - 'addr'
-      - 'sz'
-      - 'wchan'
-      - 'stime'
-      - 'tty'
-      - 'time'
-      - 'cmd'
-- transform:
-    element: 'stime'
-    using_code: 'sub { ... }'
-- transform:
-    element: 'time'
-    using_code: 'sub { ... }'
-- transform:
-    element: 'tty'
-    using:
-      nullif: '?'
-- transform:
-    element: 'ppid'
-    using:
-      nullif: '0'
-- transform:
-    element: 'pri'
-    using:
-      nullif: '-'
-- transform:
-    element: 'ni'
-    using:
-      nullif: '-'
+- vars:
+    regexp:
+      - name: STIME
+        value: '((\d\d:\d\d)|([A-Z][a-z][a-z]\d\d)|(\d{4}))'
+      - name: TIME
+        value: '((\d+-)?\d\d:\d\d:\d\d)'
+- parse: '^(\d)\s+([A-Z])\s+(\w+)\s+(\d+)\s+(\d+)\s+(\d+)\s+((-?\d+)|(-))\s+((-?\d+)|(-))\s+(-)\s+(\d+)\s+(\w*)\s+($STIME)\s+(\S+)\s+($TIME)\s(.+)$'
+  within: 'ps'
+  split:
+    on: '\s+'
+    limit: 15
+  into:
+    - 'f'
+    - 's'
+    - 'uid'
+    - 'pid'
+    - 'ppid'
+    - 'c'
+    - 'pri'
+    - 'ni'
+    - 'addr'
+    - 'sz'
+    - 'wchan'
+    - 'stime'
+    - 'tty'
+    - 'time'
+    - 'cmd'
+- transform: 'stime'
+  using:
+    code: 'sub { ... }'
+- transform: 'time'
+  using:
+    code: 'sub { ... }'
+- transform: 'tty'
+  using:
+    nullif: '?'
+- transform: 'ppid'
+  using:
+    nullif: '0'
+- transform: 'pri'
+  using:
+    nullif: '-'
+- transform: 'ni'
+  using:
+    nullif: '-'

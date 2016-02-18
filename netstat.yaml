@@ -19,60 +19,52 @@
     - name: 'unix'
       start_regexp: '^Active UNIX domain sockets'
       skip_start_lines: 1
-- parse:
-    table: 'internet'
-    skip_start_lines: 1
-    regexp: '^(\w+)\s+(\d+)\s+(\d+)\s+($IP_PORT)\s+($IP_PORT)\s+($PORT_STATE)$'
-    into:
-      - 'proto'
-      - 'revc_q'
-      - 'send_q'
-      - 'local'
-      - 'foreign'
-      - 'state'
-- parse:
-    element: 'internet.local'
-    regexp: '^(.+):(\d+|\*)$'
-    into:
-      - 'local_addr'
-      - 'local_port'
-- parse:
-    element: 'internet.foreign'
-    regexp: '^(.+):(\d+|\*)$'
-    into:
-      - 'foreign_addr'
-      - 'foreign_port'
-- translate:
-    element: 'internet.local_addr'
-    using_code: 'eval { IP($_[0])->as_n128 }'
-- translate:
-    element: 'internet.local_port'
-    using:
-      nullif: '*'
-- translate:
-    element: 'internet.foreign_addr'
-    using_code: 'eval { IP($_[0])->as_n128 }'
-- translate:
-    element: 'internet.foreign_port'
-    using:
-      nullif: '*'
-- translate:
-    element: 'internet.state'
-    using:
-      nullif: ''
-- parse:
-    table: 'unix'
-    skip_start_lines: 1
-    regexp: '^(\w+)\s+(\d+)\s+\[\s*([[:alnum:] ]+)\s*\]\s+($SOCK_TYPE)\s+($SOCK_STATE)\s+(\d+)\s+(.+)$'
-    into:
-      - 'os'
-      - 'refcnt'
-      - 'flags'
-      - 'type'
-      - 'state'
-      - 'inode'
-      - 'path'
-- translate:
-    element: 'unix.state'
-    using:
-      nullif: ''
+- parse: '*'
+  within: 'internet'
+  regexp: '^(\w+)\s+(\d+)\s+(\d+)\s+($IP_PORT)\s+($IP_PORT)\s+($PORT_STATE)$'
+  into:
+    - 'proto'
+    - 'revc_q'
+    - 'send_q'
+    - 'local'
+    - 'foreign'
+    - 'state'
+- parse: 'internet.local'
+  regexp: '^(.+):(\d+|\*)$'
+  into:
+    - 'local_addr'
+    - 'local_port'
+- parse: 'internet.foreign'
+  regexp: '^(.+):(\d+|\*)$'
+  into:
+    - 'foreign_addr'
+    - 'foreign_port'
+- transform: 'internet.local_addr'
+  using:
+    code: 'eval { IP($_[0])->as_n128 }'
+- transform: 'internet.local_port'
+  using:
+    nullif: '*'
+- transform: 'internet.foreign_addr'
+  using:
+    code: 'eval { IP($_[0])->as_n128 }'
+- transform: 'internet.foreign_port'
+  using:
+    nullif: '*'
+- transform: 'internet.state'
+  using:
+    nullif: ''
+- parse: '*'
+  within: 'unix'
+  regexp: '^(\w+)\s+(\d+)\s+\[\s*([[:alnum:] ]+)\s*\]\s+($SOCK_TYPE)\s+($SOCK_STATE)\s+(\d+)\s+(.+)$'
+  into:
+    - 'os'
+    - 'refcnt'
+    - 'flags'
+    - 'type'
+    - 'state'
+    - 'inode'
+    - 'path'
+- transform: 'unix.state'
+  using:
+    nullif: ''
